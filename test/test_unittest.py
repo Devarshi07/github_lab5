@@ -16,24 +16,20 @@ from src import f1_analyzer
 
 
 class TestF1Analyzer(unittest.TestCase):
-    """Test cases for F1 Analyzer functions"""
     
     def setUp(self):
-        """Set up mock data before each test"""
         self.mock_lap_data = pd.DataFrame({
             'LapNumber': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             'LapTime': [92.5, 91.2, 90.8, 90.5, 90.3, 90.1, 89.9, 89.8, 89.7, 89.6]
         })
     
     def test_calculate_average_lap_time(self):
-        """Test average lap time calculation"""
         avg_time = f1_analyzer.calculate_average_lap_time(self.mock_lap_data)
         expected = self.mock_lap_data['LapTime'].mean()
         self.assertAlmostEqual(avg_time, expected, places=2,
                               msg="Average lap time calculation is incorrect")
     
     def test_calculate_average_lap_time_single_lap(self):
-        """Test average lap time with single lap"""
         single_lap_data = pd.DataFrame({
             'LapNumber': [1],
             'LapTime': [90.5]
@@ -43,7 +39,6 @@ class TestF1Analyzer(unittest.TestCase):
                         "Single lap average should equal the lap time")
     
     def test_calculate_average_lap_time_multiple_values(self):
-        """Test average calculation with known values"""
         test_data_1 = pd.DataFrame({
             'LapNumber': [1, 2, 3],
             'LapTime': [90.0, 90.0, 90.0]
@@ -63,7 +58,6 @@ class TestF1Analyzer(unittest.TestCase):
         self.assertEqual(f1_analyzer.calculate_average_lap_time(test_data_3), 86.5)
     
     def test_predict_lap_times_structure(self):
-        """Test that predict_lap_times returns correct structure"""
         result = f1_analyzer.predict_lap_times(self.mock_lap_data, future_laps=3)
         
         self.assertIn('model_score', result,
@@ -78,7 +72,6 @@ class TestF1Analyzer(unittest.TestCase):
                         "Should have 3 future lap numbers")
     
     def test_predict_lap_times_insufficient_data(self):
-        """Test that predict_lap_times raises error with insufficient data"""
         small_data = pd.DataFrame({
             'LapNumber': [1, 2, 3],
             'LapTime': [90.5, 90.3, 90.1]
@@ -90,7 +83,6 @@ class TestF1Analyzer(unittest.TestCase):
         self.assertIn("Need at least 5 laps", str(context.exception))
     
     def test_predict_lap_times_returns_floats(self):
-        """Test that predictions are float values"""
         result = f1_analyzer.predict_lap_times(self.mock_lap_data, future_laps=2)
         predictions = result['predictions']
         
@@ -99,7 +91,6 @@ class TestF1Analyzer(unittest.TestCase):
                                 "Each prediction should be a float")
     
     def test_predict_lap_times_reasonable_values(self):
-        """Test that predictions are within reasonable range"""
         result = f1_analyzer.predict_lap_times(self.mock_lap_data, future_laps=2)
         predictions = result['predictions']
         
@@ -110,7 +101,6 @@ class TestF1Analyzer(unittest.TestCase):
                           "Prediction should be less than 95 seconds")
     
     def test_predict_lap_times_with_different_future_laps(self):
-        """Test predictions with different numbers of future laps"""
         result_2 = f1_analyzer.predict_lap_times(self.mock_lap_data, future_laps=2)
         result_5 = f1_analyzer.predict_lap_times(self.mock_lap_data, future_laps=5)
         
@@ -118,7 +108,6 @@ class TestF1Analyzer(unittest.TestCase):
         self.assertEqual(len(result_5['predictions']), 5)
     
     def test_model_score_range(self):
-        """Test that model score is between -1 and 1"""
         result = f1_analyzer.predict_lap_times(self.mock_lap_data, future_laps=2)
         score = result['model_score']
         
@@ -128,7 +117,6 @@ class TestF1Analyzer(unittest.TestCase):
                            "Model score should be <= 1")
     
     def test_empty_dataframe(self):
-        """Test behavior with empty DataFrame"""
         empty_data = pd.DataFrame({
             'LapNumber': [],
             'LapTime': []

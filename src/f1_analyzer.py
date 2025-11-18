@@ -1,8 +1,3 @@
-"""
-F1 Race Data Analyzer
-This module provides functions to analyze Formula 1 race data using FastF1
-"""
-
 import fastf1
 import pandas as pd
 import numpy as np
@@ -11,33 +6,14 @@ from sklearn.model_selection import train_test_split
 
 
 def load_session_data(year, race, session_type='R'):
-    """
-    Load F1 session data for a specific race
     
-    Args:
-        year (int): Year of the race
-        race (int or str): Race number or name
-        session_type (str): Type of session ('R' for Race, 'Q' for Qualifying)
-    
-    Returns:
-        fastf1.core.Session: Session object with loaded data
-    """
     session = fastf1.get_session(year, race, session_type)
     session.load()
     return session
 
 
 def get_lap_times(session, driver):
-    """
-    Extract lap times for a specific driver
     
-    Args:
-        session: FastF1 session object
-        driver (str): Driver code (e.g., 'VER', 'HAM')
-    
-    Returns:
-        pd.DataFrame: DataFrame with lap numbers and times
-    """
     laps = session.laps.pick_driver(driver)
     lap_data = pd.DataFrame({
         'LapNumber': laps['LapNumber'],
@@ -47,29 +23,12 @@ def get_lap_times(session, driver):
 
 
 def calculate_average_lap_time(lap_data):
-    """
-    Calculate average lap time from lap data
     
-    Args:
-        lap_data (pd.DataFrame): DataFrame with lap times
-    
-    Returns:
-        float: Average lap time in seconds
-    """
     return lap_data['LapTime'].mean()
 
 
 def predict_lap_times(lap_data, future_laps=5):
-    """
-    Build a simple linear regression model to predict future lap times
     
-    Args:
-        lap_data (pd.DataFrame): DataFrame with lap numbers and times
-        future_laps (int): Number of future laps to predict
-    
-    Returns:
-        dict: Dictionary containing model score and predictions
-    """
     if len(lap_data) < 5:
         raise ValueError("Need at least 5 laps of data for prediction")
     
@@ -105,17 +64,7 @@ def predict_lap_times(lap_data, future_laps=5):
 
 
 def compare_drivers(session, driver1, driver2):
-    """
-    Compare average lap times between two drivers
     
-    Args:
-        session: FastF1 session object
-        driver1 (str): First driver code
-        driver2 (str): Second driver code
-    
-    Returns:
-        dict: Comparison results with average times and difference
-    """
     laps1 = get_lap_times(session, driver1)
     laps2 = get_lap_times(session, driver2)
     
