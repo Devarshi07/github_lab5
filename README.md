@@ -1,4 +1,4 @@
-# F1 Race Data Analyzer - MLOps Lab 1
+# Github - MLOps Lab 5
 
 A Formula 1 race data analysis project with machine learning capabilities, replacing the traditional calculator implementation for MLOps Lab 1 assignment.
 
